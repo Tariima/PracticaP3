@@ -2,9 +2,9 @@ import { allProducts } from "../data/products";
 import ProductCard from "./ProductCard";
 import { useState } from "react";
 const Products = () => {
-    
+
     const [cart, setCart] = useState([]);
-    
+
     const [message, setMessage] = useState("");
 
     const addToCart = (product) => {
@@ -12,12 +12,12 @@ const Products = () => {
         const exists = cart.find(el => el.code === product.code);
 
         if(exists){
-            setMessage([...message, "No se puede añadir un producto más de una vez."]);
+            setMessage("No se puede añadir un producto más de una vez.");
             return;
         }
 
         setCart([...cart, product]);
-        setMessage([...message, "Producto añadido."]);
+        setMessage(`${product.name} añadido al carrito.`);
     }
 
     const deleteProduct = (code) => {
@@ -25,9 +25,15 @@ const Products = () => {
         const newCart = cart.filter(e => e.code !== code);
 
         setCart(newCart);
-        setMessage([...message, "Producto eliminado del carrito."]);
+        setMessage("Producto eliminado del carrito.");
     }
 
+    const total = cart.reduce((acc, el) => acc + el.price, 0);
+
+    const buy = () => {
+        setCart([]);
+        setMessage("Compra realizada con éxito.");
+    }
 
     return (
         <>
@@ -39,14 +45,23 @@ const Products = () => {
             </section>
             <section>
                 <h2>Carrito</h2>
-                {
-                    <ul>
-                        {cart.map()}
-                        <button onClick={() => deleteProduct(e.code)}>Eliminar producto</button>
-                    </ul>
-                }
-                <h3>Total:</h3>
-                <button>Comprar</button>
+                {message && <p>{message}</p>}
+                {cart.length === 0 ? (
+                    <p>El carrito está vacío.</p>
+                ) : (
+                    <>
+                        <ul>
+                            {cart.map(e => (
+                                <li key={e.code}>
+                                    {e.name} - ${e.price}
+                                    <button onClick={() => deleteProduct(e.code)}>Eliminar</button>
+                                </li>
+                            ))}
+                        </ul>
+                        <h3>Total: ${total}</h3>
+                        <button onClick={buy}>Comprar</button>
+                    </>
+                )}
             </section>
         </>
     )
