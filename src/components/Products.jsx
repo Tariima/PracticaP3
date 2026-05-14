@@ -15,7 +15,7 @@ const Products = () => {
         }
 
         setCart([...cart, product]);
-        setMessage("Producto anadido.");
+        setMessage("Producto añadido.");
     };
 
     const deleteProduct = (code) => {
